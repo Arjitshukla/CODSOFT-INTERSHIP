@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}blog{% endblock title %}
+{% block body %}
+<!-- blog -->
+{% for post in allposts %}
+<section class="blog" id="blog">
+    <div class="container">
+        <div class="title">
+        </div>
+        <div class="blog-content">
+            <!-- item -->
+            <div class="blog-item">
+                <div class="blog-img">
+                    <img src="/media/{{post.image}}" alt="">
+                    <!-- <span><i class="far fa-heart"></i></span> -->
+                </div>
+                <div class="blog-text">
+                    <span>{{post.timeStamp}}</span>
+                    <h2>
+                        {{post.title}}</h2>
+                    <p>{{post.Content|slice:"55" }}</p>
+                    <a href="/blog/{{post.slug}}">Read More</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endfor %}
+<section class=""></section>
+{% endblock body %}

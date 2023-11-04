@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{% endblock title %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+<!-- ======>> navbar  -->
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">BlogDonkey</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/about/">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/blog/">Blog</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/contact/">Contact</a>
+          </li>
+
+        </ul>
+
+        <form method="get" action="/search/" class="d-flex" role="search">
+          <input class="form-control  mx-2" type="search" placeholder="Search" aria-label="Search" name="query"
+            id="query">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+
+
+        {% if user.is_authenticated %}
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle mx-2 ml-2" type="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <span><i class="fa-solid fa-user mx-2 " style="color: #2e422e;"></i></span>{{request.user}}
+          </button>
+          <ul class="dropdown-menu ">
+            <li><a class="dropdown-item" href="/logout/"><span>Logout</span> <i class="fa-solid fa-right-from-bracket"
+                  style="color: #12800a;"></i></a></li>
+          </ul>
+        </div>
+        {% else %}
+        <button type="button" class="btn btn-success mx-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+          <span>Log in</span><i class="fa-solid fa-right-to-bracket fa-fade mx-1" style="color: #000000;"></i>
+        </button>
+        <button type="button" class="btn btn-success mx-1" data-bs-toggle="modal" data-bs-target="#signupModal">
+          <span> SignUp</span>
+        </button>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- message alert -->
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+    <strong>👉</strong> {{ message}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endfor %}
+  <!-- end navbaar -->
+
+  <!-- SignUp Modal -->
+  <div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="signupModal">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/signup/" method='post'>
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" class="form-control my-2" id="username" name="username" minlength="5"
+                placeholder="Choose a unique username" required autocomplete="off">
+            </div>
+            <div class="form-group">
+              <label for="fname">First Name</label>
+              <input type="text" class="form-control my-3" id="fname" name="fname" placeholder="Enter Your First Name"
+                required autocomplete="off">
+            </div>
+            <div class="form-group">
+              <label for="lname">Last Name</label>
+              <input type="text" class="form-control my-3" id="lname" name="lname" placeholder="Enter Your Last Name"
+                required autocomplete="off">
+            </div>
+            <div class="form-group">
+              <label for="email">Email address</label>
+              <input type="email" class="form-control my-3" id="email" name="email" placeholder="name@example.com"
+                required autocomplete="off">
+            </div>
+            <div class="form-group">
+              <label for="pass1">Choose a password</label>
+              <input type="password" class="form-control my-1" id="pass1" name="pass1 "
+                placeholder="Choose Your Password" required autocomplete="off">
+            </div>
+            <div class="form-group">
+              <label for="pass2">Confirm Password</label>
+              <input type="password" class="form-control my-1" id="pass2" name="pass2"
+                placeholder="Enter your password again" required minlength="8">
+            </div>
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+  <!--end  SignUp Modal -->
+
+  {% block body %}
+  {% endblock body %}
+
+
+  <!--log in Modal -->
+  <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="loginModalLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/login" method="POST"> {% csrf_token %}
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" class="form-control my-2" id="loginusername" required name="loginusername"
+                placeholder="Choose a unique username">
+            </div>
+            <div class="form-group">
+              <label for="pass">Password </label>
+              <input type="password" class="form-control my-2" id="loginpassword" name="loginpassword" required
+                placeholder="Enter your password ">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- footer -->
+  <footer>
+    <div class="social-links">
+      <a href="https://www.facebook.com/profile.php?id=100077103085265"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://github.com/Arjitshukla"><i class="fab fa-github"></i></a>
+      <a href="https://www.instagram.com/__imarjit/"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.linkedin.com/in/arjit-shukla-484911275/"><i class="fab fa-linkedin"></i></a>
+    </div>
+    <span>Blog Donkey</span>
+  </footer>
+  <!-- end of footer -->
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+  <script src="/static/script.js"></script>
+</body>
+
+</html>
